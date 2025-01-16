@@ -6,6 +6,8 @@ import Image from 'next/image';
 import ButtonSm from '@/components/ButtonSm';
 import TextBlock from '@/compositions/TextBlock';
 
+export const dynamic = 'force-static';
+
 // Hämtar url för bilder direkt i queryn
 const POST_QUERY = `*[_type == "case" && slug.current == $slug][0] {
 ..., images[]{
@@ -17,7 +19,9 @@ const POST_QUERY = `*[_type == "case" && slug.current == $slug][0] {
 
 const options = { next: { revalidate: 30 } };
 
-const CasePage = async ({ params }: { params: { slug: string } }) => {
+type CasePageType = { params: Promise<{ slug: string }> };
+
+const CasePage = async ({ params }: CasePageType) => {
   const caseData = await client.fetch<SanityDocument>(
     POST_QUERY,
     params,

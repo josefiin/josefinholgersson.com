@@ -1,4 +1,3 @@
-import { caseType } from './caseType'
-import {postType} from './postType'
+import {caseType} from './caseType'
 
-export const schemaTypes = [postType, caseType]
+export const schemaTypes = [caseType]
