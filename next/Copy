@@ -1,0 +1,51 @@
+FRÅGOR MATTIAS
+– Container med vh 100
+Grid, auto, 1 fr, auto, Osäker på hur jag gör med navigering. Kan jag låta den ligga kvar? HJÄLP!
+– Varför funkar inte font-wight medium??
+– Ska text i buttons unde Case, linjera i vänsterkant
+– Work(navigering) till projekt, kanske att det inte funkade så bra? Vad tycker du
+– Ska jag ha mindre max-bredd på sidan? Ser det okej ut med nav, footer i fullbredd?
+– Är det bättre att göra en länk i tex text och footer med samma props för "öppna ny flik". Och därefter gör olika huvudklasser för styling som man lägger på beroende på var de ligger och hur man vill att de ser ut?
+– Dark mode?
+
+– Kan jag inte ändra ordning på mina uppladdade case i Sanity?
+– Hur tar jag bort POST från Sanity? Bara att ta-bort filen sen i VS code?
+
+FIXA
+
+- Alt-text för bilder
+  – Lägg ankar-länk till case på startsidan från Home i navigering
+
+Kommentera kod
+Koppla upp mot Github
+Publicera sida
+
+CASE
+Styling element sidan, okej?
+Få till bilder, kanske grid?
+
+EXTRA
+– Fixed navbar scroll up
+– Hover case
+– Darkmode
+– Skill play
+
+      <div className="h-dvh grid grid-rows-[auto_1fr_auto] mb-lg">
+        <TextImageBlock
+          className="mb-md"
+          imageSrc="Design-sticker.svg"
+          imageAlt="Designer front-end svg"
+          text="I’m Josefin – a Designer based in Jönköping, Sweden. I recently completed studies in Front-end development to expand my skill set."
+          buttonText="Github"
+          buttonHref="https://github.com/josefiin"
+        />
+        <div className="w-full">
+          <Image
+            className="w-full"
+            src="design-frontend_text.svg"
+            alt="design-frontend_text"
+            width="100"
+            height="100"
+          />
+        </div>
+      </div>

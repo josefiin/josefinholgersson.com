@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #f2f1eb;
+  --foreground: #1e1e1e;
+}
+
+/* @media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1E1E1E;
+    --foreground: #ededed;
+  }
+} */
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: 'switzer', sans-serif;
+}
+
+@layer base {
+  /* Ökar bas-storlek på typsnittet vid brytpunkt md (768px)  */
+  body {
+    @apply text-lg md:leading-relaxed md:text-xl antialiased;
+  }
+
+  .link-sm {
+    @apply hover:underline decoration-1 underline-offset-4;
+  }
+
+  /* Det är olika line-height på fontstolekar i Tailwind. På en del rubriker önskar jag samma oavsett storlek på text, behöver definera line-height på samma brytpunkter som jag ändrar storlek på fonten för att det ska slå igenom. */
+  .heading-lg {
+    @apply text-2xl md:text-4xl md:leading-tight;
+  }
+
+  .heading-md {
+    @apply text-lg md:text-xl;
+  }
+
+  .preamble {
+    @apply text-2xl md:text-4xl md:leading-snug;
+  }
+  /*  40px, 80px*/
+  .mt-sm {
+    @apply mt-16 md:mt-20;
+  }
+  /*  32px, 48px*/
+  .mb-xs {
+    @apply mb-8 md:mb-12;
+  }
+  /*  64px, 80px*/
+  .mb-sm {
+    @apply mb-16 md:mb-20;
+  }
+  /*  80px, 112px*/
+  .mb-md {
+    @apply mb-20 md:mb-28;
+  }
+  /*  80px, 208x*/
+  .mb-lg {
+    @apply mb-20 md:mb-52;
+  }
+}
