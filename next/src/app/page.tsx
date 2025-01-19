@@ -46,7 +46,7 @@ const Page = async () => {
           className="md:grid grid-cols-4 gap-20 pt-20 -mt-20"
         >
           {cases.map((item) => (
-            <div className="col-span-2 mb-xs" key={item._id}>
+            <div className="col-span-2 mb-8 md:mb-0" key={item._id}>
               <Link href={`/${item.slug.current}`}>
                 {/* Visar thumbnail */}
                 <Image

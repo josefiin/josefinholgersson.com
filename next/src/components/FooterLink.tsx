@@ -14,10 +14,10 @@ const FooterLink = (props: FooterLinkProps) => {
     >
       <div className="w-8 h-8 md:w-14 md:h-14 relative">
         <Image
+          fill
           src="arrow-up-right.svg"
           alt="arrow upp right icon"
-          layout="fill"
-          objectFit="contain" // Ser till att bilden behåller proportioner
+          className="object-contain" // Ser till att bilden behåller proportioner
         />
       </div>
       <span>{props.text}</span>

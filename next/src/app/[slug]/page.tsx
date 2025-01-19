@@ -5,9 +5,10 @@ import ContentWrapper from '@/components/ContentWrapper';
 import Image from 'next/image';
 import ButtonSm from '@/components/ButtonSm';
 import TextBlock from '@/compositions/TextBlock';
-
+// Ser till så att sidorna blir statiskt genererade.
 export const dynamic = 'force-static';
 
+// Följt Sanitys "getting started guide" för hjälp med kod och hämta data från Sanity.
 // Hämtar url för bilder direkt i queryn
 const POST_QUERY = `*[_type == "case" && slug.current == $slug][0] {
 ..., images[]{
@@ -21,14 +22,13 @@ const options = { next: { revalidate: 30 } };
 
 type CasePageType = { params: Promise<{ slug: string }> };
 
-const CasePage = async ({ params }: CasePageType) => {
+const CasePage = async (props: CasePageType) => {
+  const params = await props.params;
   const caseData = await client.fetch<SanityDocument>(
     POST_QUERY,
     params,
     options,
   );
-
-  console.log(caseData);
 
   return (
     <ContentWrapper>
