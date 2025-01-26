@@ -15,6 +15,9 @@ export default {
       fontSize: {
         '10xl': '9.25rem',
       },
+      spacing: {
+        dscreen: '100dvh',
+      },
     },
   },
   plugins: [],

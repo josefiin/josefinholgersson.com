@@ -18,19 +18,6 @@ const TextBlock = (props: TextBlockProps) => {
         </h1>
       )}
       <div className="preamble col-start-1 col-span-3">{props.children}</div>
-      {/* {props.text2 && (
-        <p className="preamble col-start-1 col-span-3 mt-8 lg:mt-14">
-          {props.text2}
-        </p>
-      )} */}
-      {/* Gör kontroll på värde för knapp */}
-      {/* {props.buttonText && props.buttonHref && (
-        <Button
-          className="mt-sm col-start-1"
-          text={props.buttonText}
-          href={props.buttonHref}
-        />
-      )} */}
     </section>
   );
 };

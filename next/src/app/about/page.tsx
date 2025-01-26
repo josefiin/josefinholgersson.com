@@ -8,7 +8,7 @@ type AboutProps = {};
 
 const About = (props: AboutProps) => {
   return (
-    <ContentWrapper>
+    <ContentWrapper className="pt-40 md:pt-72">
       <TextBlock heading="Design, branding and digital experiences.">
         <p className="mb-xs">
           I’m Josefin – a Designer based in Jönköping, experienced within the

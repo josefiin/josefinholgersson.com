@@ -31,7 +31,7 @@ const CasePage = async (props: CasePageType) => {
   );
 
   return (
-    <ContentWrapper>
+    <ContentWrapper className="pt-40 md:pt-72">
       {/* Lägger ut content på sidan*/}
       <TextBlock heading={caseData.title}>
         {Array.isArray(caseData.body) && <PortableText value={caseData.body} />}
