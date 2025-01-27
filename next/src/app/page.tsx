@@ -22,11 +22,11 @@ const Page = async () => {
 
   return (
     <>
-      <div className="pt-20 md:pt-72 pb-6 md:pb-10 mb-lg h-dscreen grid grid-rows-[1fr_auto]">
+      <div className="pt-20 md:pt-40 pb-6 md:pb-10 mb-lg h-dscreen grid grid-rows-[1fr_auto]">
         <TextImageBlock
           imageSrc="Design-sticker.svg"
           imageAlt="Designer front-end svg"
-          text="I’m Josefin – a Designer based in Jönköping, Sweden. I recently completed studies in Front-end development to expand my skill set."
+          text="I’m Josefin – a Designer based in Jönköping. I recently completed studies in Front-end development to expand my skill set."
           buttonText="Github"
           buttonHref="https://github.com/josefiin"
         />
