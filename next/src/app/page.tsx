@@ -22,14 +22,16 @@ const Page = async () => {
 
   return (
     <>
-      <div className="pt-20 md:pt-40 pb-6 md:pb-10 mb-lg h-dscreen grid grid-rows-[1fr_auto]">
-        <TextImageBlock
-          imageSrc="Design-sticker.svg"
-          imageAlt="Designer front-end svg"
-          text="I’m Josefin – a Designer based in Jönköping. I recently completed studies in Front-end development to expand my skill set."
-          buttonText="Github"
-          buttonHref="https://github.com/josefiin"
-        />
+      <div className="pt-16 lg:pt-24 pb-6 md:pb-10 mb-lg h-dscreen grid gap-6 grid-rows-[1fr_auto]">
+        <div className="flex items-center">
+          <TextImageBlock
+            imageSrc="Design-sticker.svg"
+            imageAlt="Designer front-end svg"
+            text="I’m Josefin – a Designer based in Jönköping. I recently completed studies in Front-end development to expand my skill set."
+            buttonText="Github"
+            buttonHref="https://github.com/josefiin"
+          />
+        </div>
         <div className="w-full flex items-end">
           <Image
             className="w-full"

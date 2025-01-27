@@ -28,7 +28,7 @@ const TextImageBlock = (props: TextImageBlockProps) => {
         </div>
       )}
       <div className="order-first col-start-1 xl:col-span-2 col-span-3">
-        <h1 className="heading-lg mb-10 md:mb-20">{props.text}</h1>
+        <h1 className="heading-lg mb-10 md:mb-12">{props.text}</h1>
         <Button text={props.buttonText} href={props.buttonHref} />
       </div>
     </section>

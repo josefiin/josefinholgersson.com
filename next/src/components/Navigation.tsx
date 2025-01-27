@@ -35,7 +35,7 @@ const Navigation = (props: NavigationProps) => {
 
   return (
     <nav
-      className={`max-h-28 fixed top-0 left-0 right-0 w-full px-4 md:px-10 py-5 md:py-8 grid grid-cols-2 md:grid-cols-8 gap-4 md:gap-6 bg-[var(--background)] transition-transform duration-300 z-10 ${
+      className={`h-16 lg:h-24 fixed top-0 left-0 right-0 w-full px-4 md:px-10 items-center grid grid-cols-2 md:grid-cols-8 gap-4 md:gap-6 bg-[var(--background)] transition-transform duration-300 z-10 ${
         isVisible ? 'translate-y-0' : '-translate-y-full'
       }`}
     >
