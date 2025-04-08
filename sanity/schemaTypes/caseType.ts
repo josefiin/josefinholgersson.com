@@ -54,6 +54,12 @@ export const caseType = defineType({
       ],
     }),
     defineField({
+      title: 'Project tags',
+      name: 'tags',
+      type: 'array',
+      of: [{type: 'string'}],
+    }),
+    defineField({
       name: 'images',
       type: 'array',
       of: [{type: 'image'}],

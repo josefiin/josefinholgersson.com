@@ -43,7 +43,7 @@ const RootLayout = ({
     <html lang="en">
       <body className={switzer.variable}>
         <Navigation />
-        <main className="px-4 md:px-10 mb-32">{children}</main>
+        <main className="px-4 md:px-10 mb-32 flex-grow">{children}</main>
         <Footer />
       </body>
     </html>

@@ -1,15 +1,17 @@
-import Link from 'next/link';
 import { type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/client';
 import Image from 'next/image';
-import TextImageBlock from '@/compositions/TextImageBlock';
 import ContentWrapper from '@/components/ContentWrapper';
+import ProjectCard from '@/compositions/ProjectCard';
+import TextBlockStart from '@/compositions/TextBlockStart';
+import Sticker from '@/components/Sticker/Sticker';
 
 const casesQuery = `
 *[_type == "case" && defined(slug.current)] | order(_createdAt desc){
   _id,
   title,
   slug,
+  tags,
   "thumbnailImage": {
     "url": thumbnail.asset->url,
     "dimensions": thumbnail.asset->metadata.dimensions,
@@ -24,13 +26,7 @@ const Page = async () => {
     <>
       <div className="pt-16 lg:pt-24 pb-6 md:pb-10 mb-lg h-dscreen grid gap-6 grid-rows-[1fr_auto]">
         <div className="flex items-center">
-          <TextImageBlock
-            imageSrc="Design-sticker.svg"
-            imageAlt="Designer front-end svg"
-            text="I’m Josefin – a Designer based in Jönköping. I recently completed studies in Front-end development to expand my skill set."
-            buttonText="Github"
-            buttonHref="https://github.com/josefiin"
-          />
+          <TextBlockStart />
         </div>
         <div className="w-full flex items-end">
           <Image
@@ -49,26 +45,23 @@ const Page = async () => {
           className="md:grid grid-cols-4 gap-20 pt-20 -mt-20"
         >
           {cases.map((item) => (
-            <div className="col-span-2 mb-8 md:mb-0" key={item._id}>
-              <Link href={`/${item.slug.current}`}>
-                <div className="overflow-hidden mb-2 md:mb-4">
-                  {/* Visar thumbnail */}
-                  <Image
-                    src={item.thumbnailImage.url}
-                    alt={item.title}
-                    // Använder bredd och höjd från den uppladdade bilden i sanity
-                    width={item.thumbnailImage.dimensions.width}
-                    height={item.thumbnailImage.dimensions.height}
-                    quality={100}
-                    className="w-full hover:scale-105 transition-transform duration-700 ease-in-out"
-                  />
-                </div>
-                {/* Visar titel */}
-                <h2 className="heading-md">{item.title}</h2>
-              </Link>
-            </div>
+            <ProjectCard
+              className="col-span-2"
+              key={item._id}
+              title={item.title}
+              slug={item.slug.current}
+              image={{
+                url: item.thumbnailImage.url,
+                alt: item.title,
+                // Använder bredd och höjd från den uppladdade bilden i sanity
+                width: item.thumbnailImage.dimensions.width,
+                height: item.thumbnailImage.dimensions.height,
+              }}
+              tags={item.tags || []} // Om inga tags finns, skicka en tom array
+            />
           ))}
         </section>
+        <div className="w-full"></div>
       </ContentWrapper>
     </>
   );

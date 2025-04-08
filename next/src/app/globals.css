@@ -23,7 +23,7 @@ body {
 @layer base {
   /* Ökar bas-storlek på typsnittet vid brytpunkt md (768px)  */
   body {
-    @apply text-lg md:leading-relaxed md:text-xl antialiased;
+    @apply text-lg md:leading-relaxed md:text-xl antialiased flex flex-col min-h-screen;
   }
 
   .link-sm {

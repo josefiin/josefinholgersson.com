@@ -6,7 +6,7 @@ type ContentWrapperProps = PropsWithChildren<{
 }>;
 
 const ContentWrapper = (props: ContentWrapperProps) => {
-  const classes = classNames('mx-auto max-w-[1728px]', props.className);
+  const classes = classNames('mx-auto max-w-[1728px', props.className);
 
   return <div className={classes}>{props.children}</div>;
 };
