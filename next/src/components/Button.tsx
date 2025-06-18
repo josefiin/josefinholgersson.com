@@ -12,7 +12,7 @@ const Button = (props: ButtonProps) => {
   // Sätter ett defaultvärde för target så att den öppnas i ny flik om inget anges
   const { text, href, className, target = '_blank' } = props;
   const classes = classNames(
-    'text-2xl md:text-3xl w-fit flex gap-4 items-center justify-center border-2 border-foreground rounded-full px-8 md:px-10 py-2 hover:bg-decoration transition-colors duration-300 ease-in-out',
+    'text-2xl md:text-3xl w-fit h-14 flex gap-4 items-center justify-center border-2 border-foreground rounded-full px-8 md:px-10 hover:bg-decoration transition-colors duration-300 ease-in-out',
     className,
   );
 
@@ -28,7 +28,7 @@ const Button = (props: ButtonProps) => {
       />
       <Image
         className="block h-8 w-8 md:hidden"
-        src="./arrow-right_m.svg"
+        src="/arrow-right_m.svg"
         alt="arrow right icon"
         width="32"
         height="32"

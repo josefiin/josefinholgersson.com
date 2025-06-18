@@ -2,31 +2,30 @@ import classNames from 'classnames';
 import { PortableText } from 'next-sanity';
 import { PropsWithChildren } from 'react';
 
-type TextBlockProps = PropsWithChildren<{
+type InfoSectionProps = PropsWithChildren<{
   heading?: string;
   body?: any[];
   className?: string;
 }>;
 
-const TextBlock = (props: TextBlockProps) => {
-  const classes = classNames('lg:grid grid-cols-4 mb-sm', props.className);
+const InfoSection = (props: InfoSectionProps) => {
+  const classes = classNames('lg:grid grid-cols-4 mb-xs', props.className);
 
   return (
-    <section data-component="TextBlock" className={classes}>
-      {/* Gör kontroll på om text finns för h1 */}
+    <section data-component="InfoSection" className={classes}>
       {props.heading && (
-        <h1 className="lg:col-span-2 2xl:col-span-1 heading-lg mb-xs">
+        <h2 className="text-sm font-medium tracking-wide col-start-1 col-span-2 mb-2 md:mb-3">
           {props.heading}
-        </h1>
+        </h2>
       )}
-      <div className="preamble col-start-1 col-span-3">
+      <div className="col-start-1 col-span-2">
         {props.body ? (
           <PortableText
             value={props.body}
             components={{
               block: {
                 normal: ({ children }) => (
-                  <p className="mb-xs last:mb-0">{children}</p>
+                  <p className="mb-6 last:mb-0">{children}</p>
                 ),
               },
             }}
@@ -39,4 +38,4 @@ const TextBlock = (props: TextBlockProps) => {
   );
 };
 
-export default TextBlock;
+export default InfoSection;

@@ -1,87 +1,96 @@
 import { PortableText, type SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/client';
-import SubheadingBlock from '@/components/SubheadingBlock';
-import ContentWrapper from '@/components/ContentWrapper';
-import Image from 'next/image';
-import ButtonSm from '@/components/ButtonSm';
 import TextBlock from '@/compositions/TextBlock';
-// Ser till så att sidorna blir statiskt genererade.
+import SubheadingBlock from '@/compositions/InfoSection';
+import Button from '@/components/Button';
+import ContentWrapper from '@/components/ContentWrapper';
+
 export const dynamic = 'force-static';
 
-// Följt Sanitys "getting started guide" för hjälp med kod och hämta data från Sanity.
-// Hämtar url för bilder direkt i queryn
-const POST_QUERY = `*[_type == "case" && slug.current == $slug][0] {
-..., images[]{
-  _key,
-  "url": asset->url,
-  "dimensions": asset->metadata.dimensions,
+const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
+  title,
+  slug,
+  heading,
+  pageBuilder[]{
+    ...,
+    _type == "textBlock" => {
+      _type,
+      heading,
+      content
+    },
+
+    // InfoSection (SubheadingBlock)
+    _type == "infoSection" => {
+      _type,
+      heading,
+      body
+    },
+
+    // LinkSection (Button)
+    _type == "linkSection" => {
+      _type,
+      links
+    }
+  }
 }
-}`;
+`;
 
-const options = { next: { revalidate: 30 } };
+type PageProps = {
+  params: { slug: string };
+};
 
-type CasePageType = { params: Promise<{ slug: string }> };
+const Page = async ({ params }: PageProps) => {
+  const pageData = await client.fetch<SanityDocument>(PAGE_QUERY, {
+    slug: params.slug,
+  });
 
-const CasePage = async (props: CasePageType) => {
-  const params = await props.params;
-  const caseData = await client.fetch<SanityDocument>(
-    POST_QUERY,
-    params,
-    options,
-  );
+  if (!pageData) {
+    return <div>Cannot find page.</div>;
+  }
+
+  console.log(pageData);
 
   return (
     <ContentWrapper className="pt-40 md:pt-72">
-      {/* Lägger ut content på sidan*/}
-      <TextBlock heading={caseData.title}>
-        {Array.isArray(caseData.body) && <PortableText value={caseData.body} />}
-      </TextBlock>
-      {/* Info-texter kommer in via caseData.info och är en array med object i.*/}
-      <section className="mb-sm col-start-1 col-span-1">
-        {Array.isArray(caseData.info) &&
-          caseData.info.map((item, index) => (
-            <SubheadingBlock
-              key={item._key}
-              heading={item.title}
-              body={item.body}
-            />
-          ))}
-      </section>
+      {/* <h1>{pageData.title}</h1> */}
 
-      <div className="md:flex gap-4 mb-sm [&>*:not(:last-child)]:mb-4 [&>*:not(:last-child)]:md:mb-0">
-        {/* Varje knapp utom den sista mb-4 i mobil. */}
-        {Array.isArray(caseData.links) &&
-          caseData.links.map((item, index) => (
-            <ButtonSm
-              key={item._key}
-              text={item.text}
-              href={item.href}
-              className="w-full md:w-auto"
-            />
-          ))}
-      </div>
-
-      <div className="w-full">
-        {Array.isArray(caseData.images) &&
-          caseData.images.map((image) => {
+      {pageData.pageBuilder?.map((block: any, index: number) => {
+        switch (block._type) {
+          case 'textBlock':
             return (
-              image && (
-                <Image
-                  key={image._key}
-                  src={image.url}
-                  alt={caseData.title}
-                  // Använder bredd och höjd från den uppladdade bilden i sanity
-                  width={image.dimensions.width}
-                  height={image.dimensions.height}
-                  quality={100}
-                  className="w-full mb-5"
-                />
-              )
+              <TextBlock
+                key={index}
+                heading={block.heading}
+                body={block.content}
+              />
             );
-          })}
-      </div>
+          case 'infoSection':
+            return (
+              <SubheadingBlock
+                key={index}
+                heading={block.heading}
+                body={block.content}
+              />
+            );
+          case 'linkSection':
+            return (
+              <div key={index} className="mt-20">
+                {block.links.map((link: any) => (
+                  <Button
+                    key={link._key}
+                    text={link.text}
+                    href={link.href}
+                    target={link.target}
+                  />
+                ))}
+              </div>
+            );
+          default:
+            return null;
+        }
+      })}
     </ContentWrapper>
   );
 };
 
-export default CasePage;
+export default Page;

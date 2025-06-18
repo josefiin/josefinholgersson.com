@@ -4,7 +4,6 @@ import Image from 'next/image';
 import ContentWrapper from '@/components/ContentWrapper';
 import ProjectCard from '@/compositions/ProjectCard';
 import TextBlockStart from '@/compositions/TextBlockStart';
-import Sticker from '@/components/Sticker/Sticker';
 
 const casesQuery = `
 *[_type == "case" && defined(slug.current)] | order(_createdAt desc){
@@ -49,7 +48,7 @@ const Page = async () => {
               className="col-span-2"
               key={item._id}
               title={item.title}
-              slug={item.slug.current}
+              slug={`project/${item.slug.current}`}
               image={{
                 url: item.thumbnailImage.url,
                 alt: item.title,

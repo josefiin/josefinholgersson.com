@@ -1,11 +1,18 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import NavLink from './NavLink';
+import NavLink from '../components/NavLink';
 
-type NavigationProps = {};
+type Page = {
+  title: string;
+  slug: string;
+};
 
-const Navigation = (props: NavigationProps) => {
+type NavigationProps = {
+  pages: Page[];
+};
+
+const Navigation = ({ pages }: NavigationProps) => {
   const [isVisible, setIsVisible] = useState(true);
   const prevScrollPos = useRef({ value: 0 });
 
@@ -47,14 +54,14 @@ const Navigation = (props: NavigationProps) => {
         <li>
           <NavLink href="/#case-section" text="Work" />
         </li>
-        <li>
-          <NavLink href="/about" text="About" />
-        </li>
+        {pages.map((page) => (
+          <li key={page.slug}>
+            <NavLink href={`/${page.slug}`} text={page.title} />
+          </li>
+        ))}
       </ul>
     </nav>
   );
 };
 
 export default Navigation;
-
-// grid grid-cols-2 md:grid-cols-8 gap-4 md:gap-6 px-4 md:px-10 fixed top-0 bg-white transition-transform duration-300 pt-6 md:pt-10 mb-lg
