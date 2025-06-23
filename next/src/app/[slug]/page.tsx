@@ -36,12 +36,13 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
 `;
 
 type PageProps = {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 };
-
 const Page = async ({ params }: PageProps) => {
+  const { slug } = await params;
+
   const pageData = await client.fetch<SanityDocument>(PAGE_QUERY, {
-    slug: params.slug,
+    slug,
   });
 
   if (!pageData) {
