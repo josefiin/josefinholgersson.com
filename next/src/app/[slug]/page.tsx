@@ -49,8 +49,6 @@ const Page = async ({ params }: PageProps) => {
     return <div>Cannot find page.</div>;
   }
 
-  console.log(pageData);
-
   return (
     <ContentWrapper className="pt-40 md:pt-72">
       {/* <h1>{pageData.title}</h1> */}

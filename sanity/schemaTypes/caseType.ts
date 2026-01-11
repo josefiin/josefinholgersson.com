@@ -1,3 +1,4 @@
+import {orderRankField} from '@sanity/orderable-document-list'
 import {defineField, defineType} from 'sanity'
 // Strukturerar datan och definerar datatyp från Sanity.
 export const caseType = defineType({
@@ -5,6 +6,7 @@ export const caseType = defineType({
   title: 'Case',
   type: 'document',
   fields: [
+    orderRankField({type: 'case'}),
     defineField({
       name: 'title',
       type: 'string',

@@ -10,6 +10,7 @@ type InfoSectionProps = PropsWithChildren<{
 
 const InfoSection = (props: InfoSectionProps) => {
   const classes = classNames('lg:grid grid-cols-4 mb-xs', props.className);
+  console.log(props);
 
   return (
     <section data-component="InfoSection" className={classes}>
@@ -27,6 +28,21 @@ const InfoSection = (props: InfoSectionProps) => {
                 normal: ({ children }) => (
                   <p className="mb-6 last:mb-0">{children}</p>
                 ),
+              },
+              marks: {
+                link: ({ children, value }) => {
+                  const target = value.target || '_self';
+
+                  return (
+                    <a
+                      href={value.href}
+                      target={target}
+                      rel={target === '_blank' ? 'noopener' : undefined}
+                    >
+                      {children}
+                    </a>
+                  );
+                },
               },
             }}
           />

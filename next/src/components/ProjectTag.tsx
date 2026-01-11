@@ -7,7 +7,7 @@ type ProjectTagProps = {
 
 const ProjectTag = (props: ProjectTagProps) => {
   const classes = classNames(
-    'text-xs text-stone-700 py-1 px-4 backdrop-blur-sm bg-white/40 rounded-full',
+    'text-xs text-stone-800 py-1 px-4 backdrop-blur-sm bg-white/50 rounded-full',
     props.className,
   );
 

@@ -1,5 +1,5 @@
 import {DocumentTextIcon} from '@sanity/icons'
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, defineArrayMember} from 'sanity'
 
 export const infoSection = defineType({
   name: 'infoSection',
@@ -16,8 +16,37 @@ export const infoSection = defineType({
     defineField({
       name: 'content',
       type: 'array',
-      of: [{type: 'block'}],
       title: 'Text',
+      of: [
+        defineArrayMember({
+          type: 'block',
+          marks: {
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  {name: 'href', type: 'url', title: 'URL'},
+                  {
+                    name: 'target',
+                    type: 'string',
+                    title: 'Target',
+                    options: {
+                      list: [
+                        {title: 'Same tab', value: '_self'},
+                        {title: 'New tab', value: '_blank'},
+                      ],
+                      layout: 'radio',
+                    },
+                    initialValue: '_self',
+                  },
+                ],
+              },
+            ],
+          },
+        }),
+      ],
     }),
   ],
   preview: {
