@@ -22,8 +22,6 @@ const DragDrop = ({
 }: DragDropProps) => {
   const [rotation, setRotation] = useState(0);
 
-  // console.log(`Pill: ${text}`, { x, y, rotationValue }); //Kolla värdena
-
   return (
     <motion.div
       drag

@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import ContentWrapper from '@/components/ContentWrapper';
 import DragDrop from '@/components/DragDrop';
-import { log } from 'console';
 
 const skills = [
   { id: 1, text: 'Tailwind' },

@@ -1,11 +1,17 @@
-import { PortableText, type SanityDocument } from 'next-sanity';
+import type { SanityDocument } from 'next-sanity';
 import { client } from '@/sanity/client';
 import TextBlock from '@/compositions/TextBlock';
 import SubheadingBlock from '@/compositions/InfoSection';
 import Button from '@/components/Button';
 import ContentWrapper from '@/components/ContentWrapper';
 
-export const dynamic = 'force-static';
+export const revalidate = 600;
+
+export async function generateStaticParams() {
+  const pageData = await client.fetch('*[_type == "page"]{slug}');
+
+  return pageData.map((page: any) => ({ slug: page.slug.current }));
+}
 
 const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
   title,
@@ -38,12 +44,9 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
 type PageProps = {
   params: Promise<{ slug: string }>;
 };
-const Page = async ({ params }: PageProps) => {
-  const { slug } = await params;
-
-  const pageData = await client.fetch<SanityDocument>(PAGE_QUERY, {
-    slug,
-  });
+const Page = async (props: PageProps) => {
+  const params = await props.params;
+  const pageData = await client.fetch<SanityDocument>(PAGE_QUERY, params);
 
   if (!pageData) {
     return <div>Cannot find page.</div>;

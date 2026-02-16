@@ -10,7 +10,6 @@ type InfoSectionProps = PropsWithChildren<{
 
 const InfoSection = (props: InfoSectionProps) => {
   const classes = classNames('lg:grid grid-cols-4 mb-xs', props.className);
-  console.log(props);
 
   return (
     <section data-component="InfoSection" className={classes}>

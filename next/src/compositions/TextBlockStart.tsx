@@ -17,8 +17,9 @@ const TextBlockStart = (props: TextBlockStartProps) => {
       <Sticker className="ml-auto lg:ml-0 col-start-4 mb-8 lg:mb-0" />
       <div className="order-first col-start-1 xl:col-span-2 col-span-3">
         <h1 className="heading-lg mb-10 md:mb-12">
-          I’m Josefin – a Designer based in Jönköping. I recently completed
-          studies in Front-end development to expand my skill set.
+          I’m Josefin — a multidisciplinary designer based in Jönköping with a
+          background in visual design and front-end development, now expanding
+          into UX-design.
         </h1>
         <Button text="Github" href="https://github.com/josefiin" />
       </div>
