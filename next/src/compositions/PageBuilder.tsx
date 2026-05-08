@@ -1,26 +1,34 @@
 'use client';
 
+import Intro from '@/compositions/Intro';
 import TextBlock from '@/compositions/TextBlock';
-import Button from '../components/Button';
-import InfoSection from './InfoSection';
-// import FullWidthImage from './blocks/fullWidthImage';
+import InfoSection from '@/compositions/InfoSection';
+import FullWidthImage from '@/compositions/FullWidthImage';
+import ImageTwoCol from '@/compositions/ImageTwoCol';
+import HighlightText from '@/compositions/HighlightText';
+import Button from '@/components/Button';
+import ButtonSm from '@/components/ButtonSm';
 
 type PageBuilderProps = {
   blocks: any[];
+  title?: string;
+  context?: 'page' | 'case';
 };
 
-const PageBuilder = ({ blocks }: PageBuilderProps) => {
+const PageBuilder = ({ blocks, title, context = 'page' }: PageBuilderProps) => {
   if (!blocks || blocks.length === 0) return null;
 
   return (
     <>
       {blocks.map((block, index) => {
+        const key = block._key || index;
+
         switch (block._type) {
-          case 'infoSection':
+          case 'introBlock':
             return (
-              <InfoSection
-                key={index}
-                heading={block.heading}
+              <Intro
+                key={key}
+                heading={block.heading || title}
                 body={block.content}
               />
             );
@@ -28,7 +36,16 @@ const PageBuilder = ({ blocks }: PageBuilderProps) => {
           case 'textBlock':
             return (
               <TextBlock
-                key={index}
+                key={key}
+                subheading={block.subheading}
+                body={block.content}
+              />
+            );
+
+          case 'infoSection':
+            return (
+              <InfoSection
+                key={key}
                 heading={block.heading}
                 body={block.content}
               />
@@ -36,28 +53,59 @@ const PageBuilder = ({ blocks }: PageBuilderProps) => {
 
           case 'linkSection':
             return (
-              <Button
-                key={index}
-                text={block.label}
-                href={block.href}
-                target={block.target}
+              <div
+                key={key}
+                className="md:flex gap-4 mb-sm [&>*:not(:last-child)]:mb-4 [&>*:not(:last-child)]:md:mb-0"
+              >
+                {Array.isArray(block.links) &&
+                  block.links.map((link: any) =>
+                    context === 'case' ? (
+                      <ButtonSm
+                        key={link._key}
+                        text={link.text}
+                        href={link.href}
+                        className="w-full md:w-auto"
+                      />
+                    ) : (
+                      <Button
+                        key={link._key}
+                        text={link.text}
+                        href={link.href}
+                        target={link.target}
+                      />
+                    ),
+                  )}
+              </div>
+            );
+
+          case 'fullWidthImage':
+            return block.image?.url ? (
+              <FullWidthImage
+                key={key}
+                imageSrc={block.image.url}
+                altText={block.alt || title || ''}
+                imgWidth={block.image.dimensions.width}
+                imgHeight={block.image.dimensions.height}
+              />
+            ) : null;
+
+          case 'imageTwoCol':
+            return (
+              <ImageTwoCol
+                key={key}
+                imageLeft={block.imageLeft}
+                imageRight={block.imageRight}
+                alt={block.alt}
               />
             );
 
-          // case 'fullWidthImage':
-          // return (
-          //   <FullWidthImage
-          //     key={index}
-          //     imageSrc={block.image?.asset?.url || ''}
-          //     altText={block.image?.alt || 'Bild'}
-          //     imgWidth={block.image?.asset?.metadata?.dimensions?.width || 1200}
-          //     imgHeight={block.image?.asset?.metadata?.dimensions?.height || 800}
-          //   />
-          // );
+          case 'highlightText':
+            return block.quote ? (
+              <HighlightText key={key} quote={block.quote} />
+            ) : null;
 
           default:
             console.warn('Unknown block type:', block._type);
-
             return null;
         }
       })}

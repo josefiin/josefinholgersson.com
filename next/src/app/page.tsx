@@ -6,7 +6,7 @@ import ProjectCard from '@/compositions/ProjectCard';
 import TextBlockStart from '@/compositions/TextBlockStart';
 
 const casesQuery = `
-*[_type == "case" && defined(slug.current)] | order(orderRank){
+*[_type == "case" && defined(slug.current) && showOnStartPage == true] | order(orderRank){
   _id,
   title,
   slug,

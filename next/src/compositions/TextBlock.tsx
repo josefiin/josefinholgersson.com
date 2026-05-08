@@ -1,26 +1,24 @@
 import classNames from 'classnames';
 import { PortableText } from 'next-sanity';
-import { PropsWithChildren } from 'react';
 
-type TextBlockProps = PropsWithChildren<{
-  heading?: string;
+type TextBlockProps = {
+  subheading?: string;
   body?: any[];
   className?: string;
-}>;
+};
 
 const TextBlock = (props: TextBlockProps) => {
   const classes = classNames('lg:grid grid-cols-4 mb-sm', props.className);
 
   return (
     <section data-component="TextBlock" className={classes}>
-      {/* Gör kontroll på om text finns för h1 */}
-      {props.heading && (
-        <h1 className="lg:col-span-2 2xl:col-span-1 heading-lg mb-xs">
-          {props.heading}
-        </h1>
+      {props.subheading && (
+        <h2 className="col-start-2 col-span-2 heading-md mb-4 md:mb-6">
+          {props.subheading}
+        </h2>
       )}
-      <div className="preamble col-start-1 col-span-3">
-        {props.body ? (
+      {Array.isArray(props.body) && (
+        <div className="col-start-2 col-span-2">
           <PortableText
             value={props.body}
             components={{
@@ -31,10 +29,8 @@ const TextBlock = (props: TextBlockProps) => {
               },
             }}
           />
-        ) : (
-          props.children
-        )}
-      </div>
+        </div>
+      )}
     </section>
   );
 };

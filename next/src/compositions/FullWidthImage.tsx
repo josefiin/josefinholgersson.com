@@ -10,16 +10,17 @@ type FullWidthImageProps = {
 };
 
 const FullWidthImage = (props: FullWidthImageProps) => {
-  const classes = classNames('w-full mb-5', props.className);
+  const classes = classNames('w-full mb-sm', props.className);
 
   return (
-    <div>
+    <div className={classes}>
       <Image
         src={props.imageSrc}
         alt={props.altText}
         width={props.imgWidth}
         height={props.imgHeight}
         quality={100}
+        className="w-full"
       />
     </div>
   );

@@ -38,7 +38,7 @@ const ProjectCard = (props: ProjectCardProps) => {
             ))}
           </div>
         </div>
-        <h2 className="heading-md">{props.title}</h2>
+        <h2 className="heading-sm">{props.title}</h2>
       </Link>
     </div>
   );
