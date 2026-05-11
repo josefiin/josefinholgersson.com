@@ -1,10 +1,12 @@
-import {defineType, defineField, defineArrayMember} from 'sanity'
+import {defineType, defineField} from 'sanity'
+import {orderRankField} from '@sanity/orderable-document-list'
 
 export const pageType = defineType({
   name: 'page',
   title: 'Page',
   type: 'document',
   fields: [
+    orderRankField({type: 'page'}),
     defineField({
       name: 'title',
       type: 'string',
@@ -26,25 +28,16 @@ export const pageType = defineType({
     }),
     defineField({
       name: 'pageBuilder',
-      title: 'Page Builder',
+      title: 'Page content',
       type: 'array',
       of: [
-        defineArrayMember({
-          type: 'textBlock',
-          name: 'textBlock',
-        }),
-        defineArrayMember({
-          type: 'infoSection',
-          name: 'infoSection',
-        }),
-        defineArrayMember({
-          type: 'linkSection',
-          name: 'linkSection',
-        }),
-        defineArrayMember({
-          type: 'fullWidthImage',
-          name: 'fullWidthImage',
-        }),
+        {type: 'introBlock'},
+        {type: 'infoSection'},
+        {type: 'linkSection'},
+        {type: 'textBlock'},
+        {type: 'fullWidthImage'},
+        {type: 'imageTwoCol'},
+        {type: 'highlightText'},
       ],
     }),
   ],

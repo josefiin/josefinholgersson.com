@@ -1,17 +1,17 @@
 import {DocumentTextIcon} from '@sanity/icons'
 import {defineType, defineField} from 'sanity'
 
-export const textBlock = defineType({
-  name: 'textBlock',
+export const introBlock = defineType({
+  name: 'introBlock',
   type: 'object',
-  title: 'Text block',
+  title: 'Intro block',
   icon: DocumentTextIcon,
   fields: [
     defineField({
-      name: 'subheading',
+      name: 'heading',
       type: 'string',
-      title: 'Subheading',
-      description: 'Subheading is optional',
+      title: 'Heading',
+      description: 'Optional — overrides the page title as the displayed heading',
     }),
     defineField({
       name: 'content',
@@ -21,11 +21,9 @@ export const textBlock = defineType({
     }),
   ],
   preview: {
-    select: {subheading: 'subheading'},
-    prepare({subheading}) {
+    prepare() {
       return {
-        title: subheading || 'Text block',
-        subtitle: 'Text with subheading',
+        title: 'Intro block',
         media: DocumentTextIcon,
       }
     },

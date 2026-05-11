@@ -1,6 +1,6 @@
 import {orderRankField} from '@sanity/orderable-document-list'
 import {defineField, defineType} from 'sanity'
-// Strukturerar datan och definerar datatyp från Sanity.
+
 export const caseType = defineType({
   name: 'case',
   title: 'Case',
@@ -19,41 +19,12 @@ export const caseType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      title: 'Case text',
-      name: 'body',
-      type: 'array',
-      of: [{type: 'block'}],
-    }),
-    defineField({
-      title: 'Infotext',
-      name: 'info',
-      type: 'array',
-      of: [
-        {
-          title: 'Infotext',
-          name: 'info',
-          type: 'object',
-          fields: [
-            {name: 'title', type: 'string', title: 'Subheading'},
-            {name: 'body', type: 'array', of: [{type: 'block'}], title: 'Text'},
-          ],
-        },
-      ],
-    }),
-    defineField({
-      name: 'links',
-      type: 'array',
-      of: [
-        {
-          title: 'Links',
-          name: 'link',
-          type: 'object',
-          fields: [
-            {name: 'text', type: 'string', title: 'Link text'},
-            {name: 'href', type: 'string', title: 'Link to:'},
-          ],
-        },
-      ],
+      name: 'showOnStartPage',
+      title: 'Show on start page',
+      type: 'boolean',
+      initialValue: true,
+      description:
+        "Uncheck to hide this project from the start page. It's still accessible via its URL.",
     }),
     defineField({
       title: 'Project tags',
@@ -62,9 +33,18 @@ export const caseType = defineType({
       of: [{type: 'string'}],
     }),
     defineField({
-      name: 'images',
+      name: 'content',
+      title: 'Page content',
       type: 'array',
-      of: [{type: 'image'}],
+      of: [
+        {type: 'introBlock'},
+        {type: 'infoSection'},
+        {type: 'linkSection'},
+        {type: 'textBlock'},
+        {type: 'fullWidthImage'},
+        {type: 'imageTwoCol'},
+        {type: 'highlightText'},
+      ],
     }),
     defineField({
       title: 'Thumbnail image',

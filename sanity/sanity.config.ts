@@ -3,7 +3,7 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {schemaTypes} from './schemaTypes'
 import {orderableDocumentListDeskItem} from '@sanity/orderable-document-list'
-import {ConfettiIcon, IceCreamIcon} from '@sanity/icons'
+import {ConfettiIcon, ProjectsIcon} from '@sanity/icons'
 
 export default defineConfig({
   name: 'default',
@@ -18,11 +18,17 @@ export default defineConfig({
         S.list()
           .title('Content')
           .items([
-            S.listItem().title('Pages').icon(ConfettiIcon).child(S.documentTypeList('page')),
+            orderableDocumentListDeskItem({
+              type: 'page',
+              title: 'Pages',
+              icon: ConfettiIcon,
+              S,
+              context,
+            }),
             orderableDocumentListDeskItem({
               type: 'case',
               title: 'Cases',
-              icon: IceCreamIcon,
+              icon: ProjectsIcon,
               S,
               context,
             }),

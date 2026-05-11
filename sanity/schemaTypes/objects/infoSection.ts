@@ -4,7 +4,7 @@ import {defineType, defineField, defineArrayMember} from 'sanity'
 export const infoSection = defineType({
   name: 'infoSection',
   type: 'object',
-  title: 'Info section',
+  title: 'Info text',
   icon: DocumentTextIcon,
   fields: [
     defineField({
@@ -56,7 +56,7 @@ export const infoSection = defineType({
     prepare({heading}) {
       return {
         title: heading || 'Untitled section',
-        subtitle: 'Info section',
+        subtitle: 'Info text',
         media: DocumentTextIcon,
       }
     },

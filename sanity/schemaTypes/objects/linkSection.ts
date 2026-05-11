@@ -4,7 +4,7 @@ import {defineType, defineField} from 'sanity'
 export const linkSection = defineType({
   name: 'linkSection',
   type: 'object',
-  title: 'Link section',
+  title: 'Links (buttons',
   icon: LinkIcon,
   fields: [
     defineField({
@@ -31,7 +31,7 @@ export const linkSection = defineType({
       const title = links?.[0]?.text || 'Untitled link'
       return {
         title,
-        subtitle: 'Link section',
+        subtitle: 'Links (buttons)',
         media: LinkIcon,
       }
     },
