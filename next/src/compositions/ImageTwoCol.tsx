@@ -10,7 +10,7 @@ type ImageTwoColProps = {
 
 const ImageTwoCol = (props: ImageTwoColProps) => {
   const classes = classNames(
-    'w-full mb-sm grid grid-cols-1 md:grid-cols-2 gap-5',
+    'w-full grid grid-cols-1 md:grid-cols-2 gap-5',
     props.className,
   );
 

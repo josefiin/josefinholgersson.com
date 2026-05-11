@@ -23,6 +23,12 @@ const PageBuilder = ({ blocks, title, context = 'page' }: PageBuilderProps) => {
       {blocks.map((block, index) => {
         const key = block._key || index;
 
+        const imageTypes = ['fullWidthImage', 'imageTwoCol'];
+        const nextBlock = blocks[index + 1];
+        const nextIsImage = nextBlock && imageTypes.includes(nextBlock._type);
+        const currentIsImage = imageTypes.includes(block._type);
+        const spacingClass = currentIsImage && nextIsImage ? 'mb-5' : 'mb-sm';
+
         switch (block._type) {
           case 'introBlock':
             return (
@@ -86,6 +92,7 @@ const PageBuilder = ({ blocks, title, context = 'page' }: PageBuilderProps) => {
                 altText={block.alt || title || ''}
                 imgWidth={block.image.dimensions.width}
                 imgHeight={block.image.dimensions.height}
+                className={spacingClass}
               />
             ) : null;
 
@@ -95,6 +102,7 @@ const PageBuilder = ({ blocks, title, context = 'page' }: PageBuilderProps) => {
                 key={key}
                 imageLeft={block.imageLeft}
                 imageRight={block.imageRight}
+                className={spacingClass}
                 alt={block.alt}
               />
             );
