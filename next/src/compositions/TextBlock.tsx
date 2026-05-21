@@ -13,7 +13,7 @@ const TextBlock = (props: TextBlockProps) => {
   return (
     <section data-component="TextBlock" className={classes}>
       {props.subheading && (
-        <h2 className="col-start-2 col-span-2 heading-md mb-4 md:mb-6">
+        <h2 className="col-start-2 col-span-2 heading-md mb-2 md:mb-4">
           {props.subheading}
         </h2>
       )}
