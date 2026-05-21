@@ -23,7 +23,7 @@ body {
 @layer base {
   /* Ökar bas-storlek på typsnittet vid brytpunkt md (768px)  */
   body {
-    @apply text-lg md:leading-relaxed md:text-xl antialiased flex flex-col min-h-screen;
+    @apply md:leading-relaxed md:text-xl antialiased flex flex-col min-h-screen;
   }
 
   .link-sm {
@@ -31,20 +31,21 @@ body {
   }
 
   /* Det är olika line-height på fontstolekar i Tailwind. På en del rubriker önskar jag samma oavsett storlek på text, behöver definera line-height på samma brytpunkter som jag ändrar storlek på fonten för att det ska slå igenom. */
+  /*  20px, 36px*/
   .heading-lg {
-    @apply text-2xl md:text-4xl md:leading-tight;
+    @apply text-xl md:text-4xl md:leading-tight;
   }
-  /*  24px, 30px*/
+  /*  20px, 30px*/
   .heading-md {
-    @apply text-2xl md:text-3xl;
+    @apply text-xl md:text-3xl;
   }
-
+  /*  18px, 20px*/
   .heading-sm {
     @apply text-lg md:text-xl;
   }
-
+  /*  20px, 36px*/
   .preamble {
-    @apply text-2xl md:text-4xl md:leading-snug;
+    @apply text-xl md:text-4xl md:leading-snug;
   }
   /*  40px, 80px*/
   .mt-sm {
