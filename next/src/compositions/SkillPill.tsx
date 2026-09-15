@@ -38,11 +38,12 @@ type PlacedPill = Skill & {
 // Höjden som reserveras längst ner så att pillen inte hamnar bakom inmatningen.
 const INPUT_AREA_HEIGHT = 110;
 
-// Hur stor del av ett pill som får hamna utanför canvasens sidokanter.
-// Noll här: eftersom kandidatsökningen nedan gärna lägger pillen så långt ifrån
-// varandra som möjligt hamnar de ändå nära kanterna, och då ska de ligga kvar
-// innanför dem.
-const OVERHANG = 0;
+// Hur stor del av ett pill som får hamna utanför canvasens sidokanter. Att de
+// sticker ut är med flit: går texten inte att läsa drar man in pillet igen.
+// Dragningen tillåter mer överhäng än utplaceringen, så ett pill som hamnat
+// utanför kanten går alltid att dra in helt.
+// Gäller bara i sidled. Ett pill bakom inmatningsfältet vore svårare att rädda.
+const OVERHANG = 0.15;
 
 // Antal kandidatpositioner som testas per pill. Rent slumpade positioner
 // klumpar ihop sig förvånansvärt ofta, så varje pill får flera förslag och

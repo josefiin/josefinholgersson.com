@@ -23,7 +23,7 @@ const TextBlockStart = (props: TextBlockStartProps) => {
         </h1>
         <div className="md:flex gap-4 [&>*:not(:last-child)]:mb-4 [&>*:not(:last-child)]:md:mb-0">
           <Button text="Github" href="https://github.com/josefiin" />
-          <Button text="Skill pill" href="/skill-pill" target="_self" />
+          <Button text="Skill pills" href="/skill-pill" target="_self" />
         </div>
       </div>
     </section>

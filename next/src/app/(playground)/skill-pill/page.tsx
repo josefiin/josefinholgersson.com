@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import SkillPill, { type Skill } from '@/compositions/SkillPill';
 
 export const metadata: Metadata = {
-  title: 'Skill pill — Josefin Holgersson',
+  title: 'Skill pills — Josefin Holgersson',
   description: 'Dra, snurra och lägg till skills på en interaktiv yta.',
 };
 
