@@ -114,6 +114,7 @@ const PageBuilder = ({ blocks, title, context = 'page' }: PageBuilderProps) => {
 
           default:
             console.warn('Unknown block type:', block._type);
+
             return null;
         }
       })}

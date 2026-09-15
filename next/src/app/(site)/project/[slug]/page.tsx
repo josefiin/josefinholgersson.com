@@ -7,6 +7,7 @@ export const revalidate = 600;
 
 export async function generateStaticParams() {
   const pageData = await client.fetch('*[_type == "case"]{slug}');
+
   return pageData.map((page: any) => ({ slug: page.slug.current }));
 }
 
