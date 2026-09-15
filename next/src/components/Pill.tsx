@@ -77,7 +77,7 @@ const Pill = (props: PillProps) => {
   };
 
   const pillClasses = classNames(
-    'rounded-full border-2 md:border-4 border-foreground text-foreground text-center leading-none whitespace-nowrap px-8 py-2 md:px-24 md:py-8 text-[length:var(--pill-font-size)]',
+    'rounded-full border-2 lg:border-4 border-foreground text-foreground text-center leading-none whitespace-nowrap px-8 py-2 lg:px-24 lg:py-8 text-[length:var(--pill-font-size)]',
     variant === 'decoration' ? 'bg-decoration' : 'bg-background',
   );
 
@@ -126,6 +126,10 @@ const Pill = (props: PillProps) => {
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleClick}
+          // Länkar går att dra som standard i webbläsaren. Den inbyggda
+          // dragningen äter upp pekarhändelserna innan Motion ser dem, så
+          // pillet skulle inte gå att flytta alls utan detta.
+          draggable={false}
           className="block"
           style={{ cursor: 'inherit' }}
         >

@@ -11,35 +11,69 @@ export type Skill = {
 };
 
 type SkillPillProps = {
+  // Listan att slumpa ur.
   skills: Skill[];
+  // Skills som alltid ska visas, oavsett slumpen. Renderas sist och hamnar
+  // därmed överst i högen.
+  pinnedSkills?: Skill[];
+  // Hur många som slumpas fram ur skills.
+  count?: number;
 };
+
+// Modulnivå för att referensen ska vara stabil mellan renderingar. Ett nytt
+// tomt värde per rendering hade fått useEffect att köra om i all oändlighet.
+const NO_PINNED_SKILLS: Skill[] = [];
 
 type PlacedPill = Skill & {
   id: string;
   x: number;
   y: number;
+  // Måtten sparas för att nästa pill ska kunna placeras på avstånd från detta.
+  width: number;
+  height: number;
   rotation: number;
   variant: PillVariant;
 };
 
 // Höjden som reserveras längst ner så att pillen inte hamnar bakom inmatningen.
-const INPUT_AREA_HEIGHT = 140;
+const INPUT_AREA_HEIGHT = 110;
 
 // Hur stor del av ett pill som får hamna utanför canvasens sidokanter.
-const OVERHANG = 0.1;
+// Noll här: eftersom kandidatsökningen nedan gärna lägger pillen så långt ifrån
+// varandra som möjligt hamnar de ändå nära kanterna, och då ska de ligga kvar
+// innanför dem.
+const OVERHANG = 0;
+
+// Antal kandidatpositioner som testas per pill. Rent slumpade positioner
+// klumpar ihop sig förvånansvärt ofta, så varje pill får flera förslag och
+// den som hamnar längst från de redan utplacerade vinner. Högre värde ger
+// jämnare spridning men mindre slump.
+const POSITION_CANDIDATES = 30;
 
 // Pillens textstorlek. Detta är den enda platsen att ändra storleken på:
 // värdena används både för CSS-variabeln som Pill läser och för uträkningen
 // av var pillen får plats. Ändras de på ett ställe men inte det andra hamnar
 // pillen fel utan att något syns i koden.
 const FONT_MIN = 32;
-const FONT_VW = 7;
+const FONT_VW = 4.5;
 const FONT_MAX = 120;
 
 const PILL_FONT_SIZE = `clamp(${FONT_MIN}px, ${FONT_VW}vw, ${FONT_MAX}px)`;
 
 const randomBetween = (min: number, max: number) =>
   Math.random() * (max - min) + min;
+
+// Fisher-Yates: blandar en kopia av listan och tar de första.
+const pickRandom = (items: Skill[], count: number) => {
+  const shuffled = [...items];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, count);
+};
 
 // Pillen positioneras från canvasens övre vänstra hörn, så storleken måste
 // uppskattas innan de renderas för att de inte ska hamna utanför kanten.
@@ -49,8 +83,10 @@ const estimateSize = (label: string, canvasWidth: number) => {
     Math.max(FONT_MIN, (canvasWidth * FONT_VW) / 100),
     FONT_MAX,
   );
-  const isDesktop = canvasWidth >= 768;
-  // Motsvarar px-8/py-2 på mobil och px-24/py-8 från brytpunkt md.
+  // Den stora paddingen slår in först vid lg. Mellan md och lg är canvasen för
+  // smal för att bära den, och pillen blir då onödigt breda i förhållande till ytan.
+  const isDesktop = canvasWidth >= 1024;
+  // Motsvarar px-8/py-2 och px-24/py-8 från brytpunkt lg.
   const horizontalPadding = isDesktop ? 192 : 64;
   const verticalPadding = isDesktop ? 64 : 16;
 
@@ -62,10 +98,26 @@ const estimateSize = (label: string, canvasWidth: number) => {
   };
 };
 
+// Kortaste avståndet från en punkt till mittpunkten av redan utplacerade pill.
+const distanceToClosest = (
+  x: number,
+  y: number,
+  placed: PlacedPill[],
+): number => {
+  if (placed.length === 0) return Infinity;
+
+  return Math.min(
+    ...placed.map((pill) =>
+      Math.hypot(x - (pill.x + pill.width / 2), y - (pill.y + pill.height / 2)),
+    ),
+  );
+};
+
 const placeSkill = (
   skill: Skill,
   id: string,
   canvas: { width: number; height: number },
+  placed: PlacedPill[],
 ): PlacedPill => {
   const size = estimateSize(skill.label, canvas.width);
 
@@ -74,25 +126,40 @@ const placeSkill = (
   // spelrum krymper med bredden. Mittpunkten ger en jämn fördelning oavsett
   // hur brett pillet är, och tillåter samma överhäng åt båda hållen.
   const halfVisible = size.width * (0.5 - OVERHANG);
-  const centerX =
-    halfVisible * 2 > canvas.width
-      ? canvas.width / 2
-      : randomBetween(halfVisible, canvas.width - halfVisible);
-
+  const minCenterX = Math.min(halfVisible, canvas.width / 2);
+  const maxCenterX = Math.max(minCenterX, canvas.width - halfVisible);
   const maxY = Math.max(0, canvas.height - size.height - INPUT_AREA_HEIGHT);
+
+  let bestX = 0;
+  let bestY = 0;
+  let bestDistance = -1;
+
+  for (let i = 0; i < POSITION_CANDIDATES; i++) {
+    const centerX = randomBetween(minCenterX, maxCenterX);
+    const y = randomBetween(0, maxY);
+    const distance = distanceToClosest(centerX, y + size.height / 2, placed);
+
+    if (distance > bestDistance) {
+      bestDistance = distance;
+      bestX = centerX - size.width / 2;
+      bestY = y;
+    }
+  }
 
   return {
     ...skill,
     id,
-    x: centerX - size.width / 2,
-    y: randomBetween(0, maxY),
+    x: bestX,
+    y: bestY,
+    width: size.width,
+    height: size.height,
     rotation: randomBetween(-25, 25),
     variant: Math.random() < 0.5 ? 'decoration' : 'background',
   };
 };
 
 const SkillPill = (props: SkillPillProps) => {
-  const { skills } = props;
+  const { skills, pinnedSkills = NO_PINNED_SKILLS, count = 8 } = props;
 
   const canvasRef = useRef<HTMLDivElement>(null);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
@@ -105,10 +172,11 @@ const SkillPill = (props: SkillPillProps) => {
 
   const createId = () => {
     nextId.current += 1;
+
     return `pill-${nextId.current}`;
   };
 
-  // Mäter canvasen och sprider ut de fördefinierade skills:en första gången.
+  // Mäter canvasen och sprider ut ett slumpat urval första gången.
   // All slump sker efter mount för att undvika skillnader mot serverrenderingen.
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -116,18 +184,33 @@ const SkillPill = (props: SkillPillProps) => {
 
     const update = () => {
       const rect = canvas.getBoundingClientRect();
-      setCanvasSize({ width: rect.width, height: rect.height });
+
+      // Samma mått ska inte ge ny state, annars renderar varje resize-event om
+      // alla pill i onödan.
+      setCanvasSize((previous) =>
+        previous.width === rect.width && previous.height === rect.height
+          ? previous
+          : { width: rect.width, height: rect.height },
+      );
 
       if (!hasScattered.current && rect.width > 0) {
         hasScattered.current = true;
-        setPills(
-          skills.map((skill) =>
-            placeSkill(skill, createId(), {
-              width: rect.width,
-              height: rect.height,
-            }),
-          ),
-        );
+
+        const selected = [...pickRandom(skills, count), ...pinnedSkills];
+        const placed: PlacedPill[] = [];
+
+        selected.forEach((skill) => {
+          placed.push(
+            placeSkill(
+              skill,
+              createId(),
+              { width: rect.width, height: rect.height },
+              placed,
+            ),
+          );
+        });
+
+        setPills(placed);
       }
     };
 
@@ -135,7 +218,7 @@ const SkillPill = (props: SkillPillProps) => {
     window.addEventListener('resize', update);
 
     return () => window.removeEventListener('resize', update);
-  }, [skills]);
+  }, [skills, pinnedSkills, count]);
 
   const bringToFront = useCallback((id: string) => {
     highestZIndex.current += 1;
@@ -147,7 +230,10 @@ const SkillPill = (props: SkillPillProps) => {
 
   const addPill = (label: string) => {
     const id = createId();
-    setPills((previous) => [...previous, placeSkill({ label }, id, canvasSize)]);
+    setPills((previous) => [
+      ...previous,
+      placeSkill({ label }, id, canvasSize, previous),
+    ]);
     bringToFront(id);
   };
 
