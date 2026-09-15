@@ -21,7 +21,10 @@ const TextBlockStart = (props: TextBlockStartProps) => {
           background in visual design and front-end development, now expanding
           into UX-design.
         </h1>
-        <Button text="Github" href="https://github.com/josefiin" />
+        <div className="md:flex gap-4 [&>*:not(:last-child)]:mb-4 [&>*:not(:last-child)]:md:mb-0">
+          <Button text="Github" href="https://github.com/josefiin" />
+          <Button text="Skill pill" href="/skill-pill" target="_self" />
+        </div>
       </div>
     </section>
   );
