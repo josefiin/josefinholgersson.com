@@ -6,14 +6,15 @@ import PageBuilder from '@/compositions/PageBuilder';
 export const revalidate = 600;
 
 export async function generateStaticParams() {
-  const pageData = await client.fetch('*[_type == "page"]{slug}');
+  const pageData = await client.fetch('*[_type == "case"]{slug}');
+
   return pageData.map((page: any) => ({ slug: page.slug.current }));
 }
 
-const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
+const POST_QUERY = `*[_type == "case" && slug.current == $slug][0]{
   title,
   slug,
-  pageBuilder[]{
+  content[]{
     ...,
     _type == "fullWidthImage" => {
       _type,
@@ -38,27 +39,25 @@ const PAGE_QUERY = `*[_type == "page" && slug.current == $slug][0]{
   }
 }`;
 
-type PageProps = {
-  params: Promise<{ slug: string }>;
-};
+type CasePageType = { params: Promise<{ slug: string }> };
 
-const Page = async (props: PageProps) => {
+const CasePage = async (props: CasePageType) => {
   const params = await props.params;
-  const pageData = await client.fetch<SanityDocument>(PAGE_QUERY, params);
+  const caseData = await client.fetch<SanityDocument>(POST_QUERY, params);
 
-  if (!pageData) return <div>Cannot find page.</div>;
+  if (!caseData) return <div>Cannot find case.</div>;
 
   return (
     <ContentWrapper className="pt-40 md:pt-72">
-      {Array.isArray(pageData.pageBuilder) && (
+      {Array.isArray(caseData.content) && (
         <PageBuilder
-          blocks={pageData.pageBuilder}
-          title={pageData.title}
-          context="page"
+          blocks={caseData.content}
+          title={caseData.title}
+          context="case"
         />
       )}
     </ContentWrapper>
   );
 };
 
-export default Page;
+export default CasePage;
