@@ -25,4 +25,4 @@ A personal portfolio website crafted to showcase my work across UX/UI design and
 * **Content Architecture via Headless CMS:** Structured schemas in Sanity enable seamless, real-time content updates for projects and case studies without touching the codebase.
 * **Component-Driven & Responsive:** Accessible, mobile-first design implemented with Tailwind utility classes for consistent visual hierarchy across all viewports.
 * **Feature Spotlight – "Skill Pill":**
-  An interactive, randomized skill explorer. Designed from scratch, initially hand-coded, accelerated through visual vibe-coding in Lovable, and ultimately refactored, polished, and integrated into the Next.js production environment using Claude Code.
+  An interactive, randomized skill explorer. Designed from scratch, initially hand-coded, vibe-coded with Lovable, and polished and integrated into the site using Claude Codee.
