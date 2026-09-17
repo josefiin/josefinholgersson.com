@@ -33,10 +33,15 @@ type PlacedPill = Skill & {
   height: number;
   rotation: number;
   variant: PillVariant;
+  icon?: string;
 };
 
 // Höjden som reserveras längst ner så att pillen inte hamnar bakom inmatningen.
 const INPUT_AREA_HEIGHT = 110;
+
+// Pinnade pill får alltid neonfärgen och en pil, så att de läses som en länk
+// och inte som ännu en skill.
+const PINNED_ICON = '/arrow-up-right.svg';
 
 // Hur stor del av ett pill som får hamna utanför canvasens sidokanter. Att de
 // sticker ut är med flit: går texten inte att läsa drar man in pillet igen.
@@ -78,7 +83,7 @@ const pickRandom = (items: Skill[], count: number) => {
 
 // Pillen positioneras från canvasens övre vänstra hörn, så storleken måste
 // uppskattas innan de renderas för att de inte ska hamna utanför kanten.
-const estimateSize = (label: string, canvasWidth: number) => {
+const estimateSize = (label: string, canvasWidth: number, hasIcon: boolean) => {
   // Canvasen är lika bred som viewporten, så vw kan räknas om mot canvasbredden.
   const fontSize = Math.min(
     Math.max(FONT_MIN, (canvasWidth * FONT_VW) / 100),
@@ -91,10 +96,14 @@ const estimateSize = (label: string, canvasWidth: number) => {
   const horizontalPadding = isDesktop ? 192 : 64;
   const verticalPadding = isDesktop ? 64 : 16;
 
+  // Ikonen är 0.8em plus 0.25em mellanrum. Utan detta underskattas bredden på
+  // pinnade pill och de hamnar längre utanför kanten än tänkt.
+  const iconWidth = hasIcon ? fontSize * 1.05 : 0;
+
   // 0.62 är uppmätt mot Switzer: korta versaler som HTML är bredare per tecken
   // än långa ord, så faktorn ligger medvetet i överkant.
   return {
-    width: label.length * fontSize * 0.62 + horizontalPadding,
+    width: label.length * fontSize * 0.62 + horizontalPadding + iconWidth,
     height: fontSize * 1.1 + verticalPadding,
   };
 };
@@ -119,8 +128,9 @@ const placeSkill = (
   id: string,
   canvas: { width: number; height: number },
   placed: PlacedPill[],
+  pinned = false,
 ): PlacedPill => {
-  const size = estimateSize(skill.label, canvas.width);
+  const size = estimateSize(skill.label, canvas.width, pinned);
 
   // Positionen slumpas utifrån pillets mittpunkt i sidled. Räknat från
   // vänsterkanten skulle breda pill alltid tvingas åt vänster, eftersom deras
@@ -155,7 +165,9 @@ const placeSkill = (
     width: size.width,
     height: size.height,
     rotation: randomBetween(-25, 25),
-    variant: Math.random() < 0.5 ? 'decoration' : 'background',
+    variant:
+      pinned || Math.random() < 0.5 ? ('decoration' as const) : ('background' as const),
+    icon: pinned ? PINNED_ICON : undefined,
   };
 };
 
@@ -171,11 +183,32 @@ const SkillPill = (props: SkillPillProps) => {
   const nextId = useRef(0);
   const hasScattered = useRef(false);
 
-  const createId = () => {
+  const createId = useCallback(() => {
     nextId.current += 1;
 
     return `pill-${nextId.current}`;
-  };
+  }, []);
+
+  // Slumpar fram ett nytt urval och sprider ut det. Används både vid första
+  // renderingen och av refresh, så att de aldrig kan hamna i otakt.
+  const scatter = useCallback(
+    (canvas: { width: number; height: number }) => {
+      const selected = [
+        ...pickRandom(skills, count).map((skill) => ({ skill, pinned: false })),
+        // Pinnade läggs sist och renderas därmed överst i högen.
+        ...pinnedSkills.map((skill) => ({ skill, pinned: true })),
+      ];
+
+      const placed: PlacedPill[] = [];
+
+      selected.forEach(({ skill, pinned }) => {
+        placed.push(placeSkill(skill, createId(), canvas, placed, pinned));
+      });
+
+      return placed;
+    },
+    [skills, pinnedSkills, count, createId],
+  );
 
   // Mäter canvasen och sprider ut ett slumpat urval första gången.
   // All slump sker efter mount för att undvika skillnader mot serverrenderingen.
@@ -196,22 +229,7 @@ const SkillPill = (props: SkillPillProps) => {
 
       if (!hasScattered.current && rect.width > 0) {
         hasScattered.current = true;
-
-        const selected = [...pickRandom(skills, count), ...pinnedSkills];
-        const placed: PlacedPill[] = [];
-
-        selected.forEach((skill) => {
-          placed.push(
-            placeSkill(
-              skill,
-              createId(),
-              { width: rect.width, height: rect.height },
-              placed,
-            ),
-          );
-        });
-
-        setPills(placed);
+        setPills(scatter({ width: rect.width, height: rect.height }));
       }
     };
 
@@ -219,7 +237,7 @@ const SkillPill = (props: SkillPillProps) => {
     window.addEventListener('resize', update);
 
     return () => window.removeEventListener('resize', update);
-  }, [skills, pinnedSkills, count]);
+  }, [scatter]);
 
   const bringToFront = useCallback((id: string) => {
     highestZIndex.current += 1;
@@ -240,6 +258,16 @@ const SkillPill = (props: SkillPillProps) => {
 
   const clearPills = () => setPills([]);
 
+  // Nytt urval ur listan. Egna, tillagda pill försvinner med flit: refresh
+  // ska ge samma sorts yta som en omladdning av sidan.
+  const refreshPills = () => {
+    if (canvasSize.width === 0) return;
+
+    setPills(scatter(canvasSize));
+    setZIndexes({});
+    highestZIndex.current = 1;
+  };
+
   return (
     <div
       ref={canvasRef}
@@ -256,6 +284,7 @@ const SkillPill = (props: SkillPillProps) => {
             y={pill.y}
             rotation={pill.rotation}
             variant={pill.variant}
+            icon={pill.icon}
             zIndex={zIndexes[pill.id] || 1}
             bringToFront={() => bringToFront(pill.id)}
             canvasSize={canvasSize}
@@ -266,8 +295,9 @@ const SkillPill = (props: SkillPillProps) => {
       <PillInput
         onAdd={addPill}
         onClear={clearPills}
+        onRefresh={refreshPills}
         canClear={pills.length > 0}
-        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[min(92vw,560px)]"
+        className="absolute bottom-6 left-1/2 -translate-x-1/2 z-[9999] w-[min(96vw,560px)]"
       />
     </div>
   );

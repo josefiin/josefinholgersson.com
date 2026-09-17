@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, type PanInfo } from 'motion/react';
+import Image from 'next/image';
 import classNames from 'classnames';
 
 export type PillVariant = 'decoration' | 'background';
@@ -16,6 +17,9 @@ type PillProps = {
   bringToFront: () => void;
   canvasSize: { width: number; height: number };
   href?: string;
+  // Sökväg till en ikon som visas efter texten. Måtten sätts i em, så den
+  // följer pillets textstorlek utan egna brytpunkter.
+  icon?: string;
 };
 
 const Pill = (props: PillProps) => {
@@ -29,6 +33,7 @@ const Pill = (props: PillProps) => {
     bringToFront,
     canvasSize,
     href,
+    icon,
   } = props;
 
   const x = useMotionValue(initialX);
@@ -81,7 +86,24 @@ const Pill = (props: PillProps) => {
     variant === 'decoration' ? 'bg-decoration' : 'bg-background',
   );
 
-  const content = <div className={pillClasses}>{label}</div>;
+  const content = (
+    <div className={pillClasses}>
+      {icon ? (
+        <span className="flex items-center justify-center gap-[0.25em]">
+          <span>{label}</span>
+          <Image
+            src={icon}
+            alt=""
+            width={54}
+            height={54}
+            className="w-[0.8em] h-[0.8em]"
+          />
+        </span>
+      ) : (
+        label
+      )}
+    </div>
+  );
 
   return (
     <motion.div
