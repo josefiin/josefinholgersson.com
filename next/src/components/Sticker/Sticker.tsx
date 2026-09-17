@@ -15,11 +15,13 @@ const Sticker = (props: StickerProps) => {
 
   return (
     <div className={classes}>
+      {/* textringen skalar med cirkeln */}
       <motion.div
+        className="w-[86%] h-[86%]"
         animate={{ rotate: 360 }}
         transition={{ repeat: Infinity, duration: 10, ease: 'linear' }}
       >
-        <TextCircle className="w-full" />
+        <TextCircle className="w-full h-full" />
       </motion.div>
       <Eyes className="absolute h-full" />
     </div>
